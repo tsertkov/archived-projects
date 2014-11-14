@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org$/TR/xhtml1/DTD/xhtml1-strict.dtda">
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:devhands="http://www.devhands.com/schema">
+<head>
+    <title>Smart links POC</title>
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+</head>
+<body>
+    <h1>Smart links Proof-Of-Concept</h1>
+    <p>
+        This is a simplified example with combined direct (full page load) and ajax (partial content update) links with gracefull degradation. You can try disabling JavaScript in your browser at all.
+        These links should be good to search engines as well. JavaScript history handling is not implemented here, though it's not hard to add it.
+    </p>
+    <ul>
+        <li><a href="?page=page1" devhands:hash="page1" devhands:target="#placeholder" devhands:href="?page=page1&amp;mode=partial">page-1</a></li>
+        <li><a href="?page=page2" devhands:hash="page2" devhands:target="#placeholder" devhands:href="?page=page2&amp;mode=partial">page-2 (+ css)</a></li>
+        <li><a href="?page=page3" devhands:hash="page3" devhands:target="#placeholder" devhands:href="?page=page3&amp;mode=partial">page-3 (+ javascript)</a></li>
+    </ul>
+    <div id="placeholder"><?=$content?></div>
+    <script type="text/javascript">
+    /*<![CDATA[*/
+        $(document).ready(function(){
+
+            var baseUri = function(location){
+                return location.substr(0, location.lastIndexOf('/'));
+            }(document.location.toString());
+
+            //
+            // if request was made to open concrete page or query string was not
+            // empty reloadPageUrl will be populated with url which will be used
+            // for all "smart" links (real page reload will happend)
+            //
+            // in our case this url will be site frontpage url
+            //
+
+            var reloadPageUrl = function(){
+                if (document.location.search) {
+                    return baseUri;
+                } else {
+                    return false;
+                }
+            }();
+
+            //
+            // intial page load (load partial content immediately after page has
+            // been loaded)
+            //
+
+            if (!reloadPageUrl) {
+                if (document.location.hash && '#' != document.location.hash) {
+                    var page = encodeURIComponent(document.location.hash.substring(1));
+                } else {
+                    var page = 'page1';
+                }
+
+                $('#placeholder').load(baseUri + '?page=' + page + '&mode=partial');
+            }
+
+            //
+            // click handler for "smart" links
+            //
+
+            $('a').click(function(event){
+                var href = baseUri + this.getAttribute('devhands:href');
+                var target = this.getAttribute('devhands:target');
+                var hash = this.getAttribute('devhands:hash');
+
+                if (href && target) {
+                    if (hash && reloadPageUrl) {
+                        document.location = reloadPageUrl + '#' + hash;
+                        return false;
+                    }
+
+                    $(target).load(href);
+
+                    if (hash) {
+                        document.location = '#' + hash;
+                    }
+
+                    return false;
+                }
+            });
+        });
+    /*]]>*/
+    </script>
+</body>
+</html>

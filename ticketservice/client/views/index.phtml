@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Ticket selling service client</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <h1>Ticket selling service client</h1>
+    <?php if ($error): ?>
+      <div style="width:600px;border:1px solid #ccc;background:#efefef;padding:2px 6px;margin:20px 0;">
+          <p><strong><?php echo htmlspecialchars($errorType) ?>:</strong> <?php echo htmlspecialchars($error) ?></p>
+      </div>
+    <?php endif; ?>
+    <?php if ($success): ?>
+      <div style="width:600px;border:1px solid #ffcc66;background:#ffff99;padding:2px 6px;margin:20px 0;">
+          <p><?php echo htmlspecialchars($success) ?></p>
+      </div>
+    <?php endif; ?>
+    <form method="post" action="<?php echo $baseUri ?>">
+        <label for="requestedSeats">How many seats you would like to book:</label>
+        <input id="requestedSeats" name="requestedSeats" value="<?php echo htmlspecialchars($requestedSeats) ?>" type="text" maxlength="2" size="8" />
+        <button type="submit" name="submit" value="suggest">Suggest seats</button>
+
+        <br />
+        <?php if ($seats): ?>
+            <label>Suggested seats:</label>
+            <?php foreach ($seats as $seat): ?>
+                <input type="text" name="seats[]" value="<?php echo $seat ?>" size="2" />
+            <?php endforeach; ?>
+
+            <br />
+            <label for="name">Book suggested seats to: </label>
+            <input type="text" name="name" value="<?php echo htmlspecialchars($name) ?>" maxlength="32" size="10" />
+            <button type="submit" name="submit" value="book">Book</button>
+        <?php endif; ?>
+    </form>
+  </body>
+</html>

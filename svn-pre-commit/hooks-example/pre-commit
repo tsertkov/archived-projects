@@ -1,0 +1,23 @@
+#!/usr/bin/env PATH=/usr/bin php
+<?php
+
+require '/var/svn/hook-scripts/SvnPreCommit.php';
+
+new SvnPreCommit($argv[1], $argv[2], array(
+    'LogMessageLength' => array(3),
+    'TabIndents' => array(array('php', 'phtml')),
+    'TrailingSpaces' => array(array('php', 'phtml', 'ini')),
+    'SvnProperties' => array(array(
+        'php' => array('svn:keywords=Revision', 'svn:eol-style=LF'),
+        'phtml' => array('svn:keywords=Revision', 'svn:eol-style=LF'),
+        'html' => array('svn:eol-style=LF'),
+        'htm' => array('svn:eol-style=LF'),
+        'css' => array('svn:eol-style=LF'),
+        'xsl' => array('svn:eol-style=LF'),
+        'xml' => array('svn:eol-style=LF'),
+        'txt' => array('svn:eol-style=LF'),
+        'ini' => array('svn:eol-style=LF'),
+        'js' => array('svn:eol-style=LF'),
+        'java' => array('svn:keywords=Revision', 'svn:eol-style=LF'),
+    )),
+));

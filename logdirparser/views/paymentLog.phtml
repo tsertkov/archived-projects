@@ -1,0 +1,29 @@
+<table id="payments" class="tablesorter">
+    <thead>
+        <tr>
+            <th>Filename</th>
+            <th>Min date</th>
+            <th>Max date</th>
+            <th>Payments collected</th>
+            <th>Payments rejected</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($dirParser as $log): ?>
+        <tr>
+            <td><?php echo htmlspecialchars($log->getFilename())?></td>
+            <td><?php echo htmlspecialchars($log->getMinDate())?></td>
+            <td><?php echo htmlspecialchars($log->getMaxDate())?></td>
+            <td><?php echo $log->getTotalCollected()?></td>
+            <td><?php echo $log->getTotalRejected()?></td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<script type="text/javascript">
+/* <![CDATA[ */
+    $(document).ready(function(){
+        $('#payments').tablesorter({sortList: [[0, 0]]});
+    });
+/* ]]> */
+</script>
